@@ -2,8 +2,10 @@ package main
 
 import (
        "io"
+       "flag"
        "log"
        "net/http"
+       "strconv"
 )
 
 // upload page
@@ -15,9 +17,12 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", HelloServer)
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		log.Fatal("server failed: ", err)
-	}
+     var port = flag.Int("port", 8080, "port to listen on (default: 8080)")
+     flag.Parse()
+     log.Println("listening on port " + strconv.Itoa(*port))
+     http.HandleFunc("/", HelloServer)
+	 err := http.ListenAndServe(":" + strconv.Itoa(*port), nil)
+	 if err != nil {
+        log.Fatal("server failed: ", err)
+     }
 }
