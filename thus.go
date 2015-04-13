@@ -10,7 +10,7 @@ import (
 )
 
 // Serve the HTML form to upload a file
-func FormServer(w http.ResponseWriter, req *http.Request) {
+func formServer(w http.ResponseWriter, req *http.Request) {
 	if "GET" != req.Method {
 		log.Fatal("unsupported request method")
 	}
@@ -58,7 +58,7 @@ func main() {
 	var port = flag.Int("port", 8080, "port to listen on (default: 8080)")
 	flag.Parse()
 	log.Println("listening on port " + strconv.Itoa(*port))
-	http.HandleFunc("/", FormServer)
+	http.HandleFunc("/", formServer)
 	http.HandleFunc("/receive", uploadHandler)
 	err := http.ListenAndServe(":"+strconv.Itoa(*port), nil)
 	if err != nil {
