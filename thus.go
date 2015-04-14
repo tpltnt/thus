@@ -64,7 +64,7 @@ func main() {
 	var port = flag.Int("port", 8080, "port to listen on (default: 8080)")
 	var ip = flag.String("ip", "", "IP to bind to")
 	flag.Parse()
-	log.Println("listening on " + *ip + ":" + strconv.Itoa(*port))
+	log.Println("listening on "+*ip+":"+strconv.Itoa(*port))
 	http.HandleFunc("/", generateFormHandler(*ip, *port))
 	http.HandleFunc("/receive", uploadHandler)
 	err := http.ListenAndServe(*ip+":"+strconv.Itoa(*port), nil)
