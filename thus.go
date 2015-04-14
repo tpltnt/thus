@@ -9,17 +9,23 @@ import (
 	"strconv"
 )
 
-// Serve the HTML form to upload a file
-func formServer(w http.ResponseWriter, req *http.Request) {
-	if "GET" != req.Method {
-		log.Fatal("unsupported request method")
+// generate handler function to serve form
+func generateFormHandler(host string, port int) func(http.ResponseWriter, *http.Request) {
+	if 0 == len(host) {
+		host = "localhost"
 	}
-	io.WriteString(w, "<html><header></header><body>\n")
-	io.WriteString(w, "<form action=\"http://localhost:8080/receive\" method=\"post\" enctype=\"multipart/form-data\">")
-	io.WriteString(w, "<label for=\"file\">filename:</label>")
-	io.WriteString(w, "<input type=\"file\" name=\"file\" id=\"file\">")
-	io.WriteString(w, "<input type=\"submit\" name=\"submit\" value=\"submit\">")
-	io.WriteString(w, "</form></body></html>\n")
+	// Serve the HTML form to upload a file
+	return func(w http.ResponseWriter, req *http.Request) {
+		if "GET" != req.Method {
+			log.Fatal("unsupported request method")
+		}
+		io.WriteString(w, "<html><header></header><body>\n")
+		io.WriteString(w, "<form action=\"http://"+host+":"+strconv.Itoa(port)+"/receive\" method=\"post\" enctype=\"multipart/form-data\">")
+		io.WriteString(w, "<label for=\"file\">filename:</label>")
+		io.WriteString(w, "<input type=\"file\" name=\"file\" id=\"file\">")
+		io.WriteString(w, "<input type=\"submit\" name=\"submit\" value=\"submit\">")
+		io.WriteString(w, "</form></body></html>\n")
+	}
 }
 
 // Handle the file upload
@@ -59,7 +65,7 @@ func main() {
 	var ip = flag.String("ip", "", "IP to bind to")
 	flag.Parse()
 	log.Println("listening on " + *ip + ":" + strconv.Itoa(*port))
-	http.HandleFunc("/", formServer)
+	http.HandleFunc("/", generateFormHandler(*ip, *port))
 	http.HandleFunc("/receive", uploadHandler)
 	err := http.ListenAndServe(*ip+":"+strconv.Itoa(*port), nil)
 	if err != nil {
