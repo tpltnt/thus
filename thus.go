@@ -56,11 +56,12 @@ func uploadHandler(w http.ResponseWriter, req *http.Request) {
 
 func main() {
 	var port = flag.Int("port", 8080, "port to listen on (default: 8080)")
+	var ip = flag.String("ip", "", "IP to bind to")
 	flag.Parse()
-	log.Println("listening on port " + strconv.Itoa(*port))
+	log.Println("listening on " + *ip + ":" + strconv.Itoa(*port))
 	http.HandleFunc("/", formServer)
 	http.HandleFunc("/receive", uploadHandler)
-	err := http.ListenAndServe(":"+strconv.Itoa(*port), nil)
+	err := http.ListenAndServe(*ip+":"+strconv.Itoa(*port), nil)
 	if err != nil {
 		log.Fatal("server failed: ", err)
 	}

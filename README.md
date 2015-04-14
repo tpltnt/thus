@@ -8,7 +8,6 @@ Just run ```$go build thus.go```.
 # todo
 * add tests
 * serve upload from actual HTML file
-* add IP to bind to as cli argument
 
 # references
 * [wikipedia: HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol)
